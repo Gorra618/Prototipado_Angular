@@ -1,0 +1,113 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h3>{{ mode === 'nuevo' ? 'Nueva persona' : 'Editar persona' }}</h3>
+    </div>
+
+    <div class="card-body">
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="loading" class="alert alert-info">
+        Cargando...
+      </div>
+
+      <form [formGroup]="personaForm" *ngIf="personaForm">
+        <div class="row">
+          <div class="col-md-6">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input id="apellido" class="form-control" formControlName="apellido">
+          </div>
+          <div class="col-md-6">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input id="nombre" class="form-control" formControlName="nombre">
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" class="form-control" type="email" formControlName="email">
+          </div>
+          <div class="col-md-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input id="password" class="form-control" type="password" formControlName="password">
+          </div>
+          <div class="col-md-3">
+            <label for="confirmarPassword" class="form-label">Verificación</label>
+            <input id="confirmarPassword" class="form-control" type="password" formControlName="confirmarPassword">
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <fieldset>
+              <legend class="form-label">Género</legend>
+              <div *ngFor="let genero of generos" class="form-check">
+                <input class="form-check-input" type="radio" formControlName="generoId"
+                  [id]="'genero-' + genero.id" [value]="genero.id">
+                <label class="form-check-label" [for]="'genero-' + genero.id">
+                  {{ genero.descripcion }}
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div class="col-md-4">
+            <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
+            <input id="fechaNacimiento" class="form-control" type="date" formControlName="fechaNacimiento">
+          </div>
+          <div class="col-md-4">
+            <label for="nacionalidadId" class="form-label">Nacionalidad</label>
+            <select id="nacionalidadId" class="form-select" formControlName="nacionalidadId">
+              <option value="0" disabled>Seleccione...</option>
+              <option *ngFor="let nacionalidad of nacionalidades" [value]="nacionalidad.id">
+                {{ nacionalidad.descripcion }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label for="equipoId" class="form-label">Equipo</label>
+            <select id="equipoId" class="form-select" size="7" formControlName="equipoId">
+              <option *ngFor="let equipo of equipos" [value]="equipo.id">
+                {{ equipo.descripcion }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <fieldset>
+              <legend class="form-label">Hobbies</legend>
+              <div *ngFor="let hobby of hobbies" class="form-check">
+                <input class="form-check-input" type="checkbox" [id]="'hobby-' + hobby.id"
+                  [checked]="personaForm.get('hobbiesIds')?.value.includes(hobby.id)"
+                  (change)="onHobbyChange(hobby.id, $event)">
+                <label class="form-check-label" [for]="'hobby-' + hobby.id">
+                  {{ hobby.descripcion }}
+                </label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <label for="otrasActividades" class="form-label">Otras actividades</label>
+            <input id="otrasActividades" class="form-control" formControlName="otrasActividades">
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+          <button class="btn btn-success" type="button" (click)="guardar()">
+            Guardar
+          </button>
+          <button class="btn btn-secondary" type="button" (click)="cancelar()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

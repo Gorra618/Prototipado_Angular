@@ -1,0 +1,42 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Personas registradas</h2>
+    <button class="btn btn-primary" (click)="nuevaPersona()">Nuevo</button>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <table class="table table-striped table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>Apellido</th>
+        <th>Nombre</th>
+        <th>Género</th>
+        <th>Correo</th>
+        <th>Nacionalidad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let persona of personas">
+        <td>{{ persona.apellido }}</td>
+        <td>{{ persona.nombre }}</td>
+        <td>{{ obtenerGenero(persona.generoId) }}</td>
+        <td>{{ persona.email }}</td>
+        <td>{{ obtenerNacionalidad(persona.nacionalidadId) }}</td>
+        <td>
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-warning" type="button" (click)="editarPersona(persona)">
+              Editar
+            </button>
+            <button class="btn btn-sm btn-danger" type="button" (click)="eliminarPersona(persona)">
+              Eliminar
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
