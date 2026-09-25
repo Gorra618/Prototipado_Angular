@@ -9,32 +9,19 @@ import {
   NacionalidadResource,
   PersonaResource,
 } from '../resources/domain.model';
+
 @Injectable({ providedIn: 'root' })
 export class PersonaService {
   private readonly apiUrl = '/api';
 
   constructor(private readonly http: HttpClient) {}
 
-  getPersonas(): Observable<PersonaResource[]> {
+  getAll(): Observable<PersonaResource[]> {
     return this.http.get<PersonaResource[]>(`${this.apiUrl}/personas`);
   }
 
   getPersona(id: number): Observable<PersonaResource> {
     return this.http.get<PersonaResource>(`${this.apiUrl}/personas/${id}`);
-  }
-
-  savePersona(persona: PersonaResource): Observable<PersonaResource[]> {
-    const request = persona.id === 0
-      ? this.http.post<PersonaResource>(`${this.apiUrl}/personas`, persona)
-      : this.http.put<PersonaResource>(`${this.apiUrl}/personas/${persona.id}`, persona);
-
-    return request.pipe(switchMap(() => this.getPersonas()));
-  }
-
-  deletePersona(id: number): Observable<PersonaResource[]> {
-    return this.http.delete<void>(`${this.apiUrl}/personas/${id}`).pipe(
-      switchMap(() => this.getPersonas()),
-    );
   }
 
   getGeneros(): Observable<GeneroResource[]> {
@@ -51,5 +38,19 @@ export class PersonaService {
 
   getHobbies(): Observable<HobbyResource[]> {
     return this.http.get<HobbyResource[]>(`${this.apiUrl}/hobbies`);
+  }
+
+  savePersona(persona: PersonaResource): Observable<PersonaResource> {
+    const request = persona.id > 0
+      ? this.http.put<PersonaResource>(`${this.apiUrl}/personas/${persona.id}`, persona)
+      : this.http.post<PersonaResource>(`${this.apiUrl}/personas`, persona);
+
+    return request;
+  }
+
+  deletePersona(id: number): Observable<PersonaResource[]> {
+    return this.http.delete<void>(`${this.apiUrl}/personas/${id}`).pipe(
+      switchMap(() => this.getAll()),
+    );
   }
 }

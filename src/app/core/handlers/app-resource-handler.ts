@@ -8,13 +8,6 @@ import { MemoryDataService } from '../../mocks/memory-data.service';
 
 @Injectable()
 export class AppResourceHandler extends ResourceHandlerHttpClient {
-  private readonly staticResources = new Set([
-    'generos',
-    'nacionalidades',
-    'equipos',
-    'hobbies',
-  ]);
-
   constructor(
     http: HttpClient,
     private readonly db: MemoryDataService,
@@ -24,18 +17,16 @@ export class AppResourceHandler extends ResourceHandlerHttpClient {
   }
 
   override prepareRequest(request: IResourceRequest): HttpRequest<unknown> {
+    const url = request.url?.replace(/^\//, '');
+    const mappedUrl = this.db.getMappingUrl(url);
     const preparedRequest = super.prepareRequest(request);
 
-    if (this.isStaticResource(preparedRequest.url)) {
+    if (!mappedUrl) {
       return preparedRequest;
     }
 
-    return preparedRequest;
-  }
-
-  private isStaticResource(url: string): boolean {
-    return url
-      .split(/[/?#]/)
-      .some((segment) => this.staticResources.has(segment));
+    return preparedRequest.clone({
+      url: preparedRequest.url.replace(url ?? '', mappedUrl),
+    });
   }
 }

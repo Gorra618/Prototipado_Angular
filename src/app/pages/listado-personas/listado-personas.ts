@@ -27,7 +27,7 @@ export class ListadoPersonasComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.personaService.getPersonas().subscribe({
+    this.personaService.getAll().subscribe({
       next: (personas) => {
         this.personas = personas;
       },
